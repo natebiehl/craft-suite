@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Craft Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f0e0d;--s1:#171614;--s2:#1e1c1a;
+  --b1:#2a2825;--b2:#3a3835;--b3:#4a4845;
+  --t1:#e8e2d8;--t2:#9a9590;--t3:#5a5550;
+  --f:'IBM Plex Mono',monospace;
+  --sc:#ddb94a;--ok:#4dbf85;--no:#cf4f4f;
+}
+html{font-size:16px}
+body{background:var(--bg);color:var(--t1);font-family:var(--f);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--b1) 1px,transparent 1px),linear-gradient(90deg,var(--b1) 1px,transparent 1px);background-size:32px 32px;opacity:0.35;pointer-events:none;z-index:0}
+#wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:2rem 1.25rem 6rem}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:1.25rem;border-bottom:1px solid var(--b2);margin-bottom:1.5rem}
+.hdr-title{font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.hdr-sub{font-size:.6rem;color:var(--t3);letter-spacing:.09em;margin-top:.2rem;text-transform:uppercase}
+.xp-n{font-size:1.3rem;font-weight:700;text-align:right}
+.xp-l{font-size:.58rem;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:.1rem;text-align:right}
+.speed-row{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;padding:.7rem 1rem;background:var(--s1);border:1px solid var(--b1);border-radius:6px;flex-wrap:wrap}
+.speed-label{font-size:.58rem;color:var(--t3);text-transform:uppercase;letter-spacing:.11em;flex-shrink:0}
+.speed-opts{display:flex;gap:.35rem}
+.speed-btn{font-family:var(--f);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);background:transparent;border:1px solid var(--b2);padding:.25rem .55rem;border-radius:3px;cursor:pointer;transition:all .15s}
+.speed-btn.on{color:var(--bg);background:var(--t2);border-color:var(--t2)}
+.speed-note{font-size:.55rem;color:var(--t3);margin-left:auto;opacity:.6}
+.sec-head{font-size:.58rem;color:var(--t3);text-transform:uppercase;letter-spacing:.14em;padding:.65rem 0 .4rem;margin-top:.6rem;border-top:1px solid var(--b1)}
+.sec-head:first-of-type{border-top:none;margin-top:0;padding-top:.2rem}
+.sk-list{display:flex;flex-direction:column;gap:.5rem}
+.sk-card{--sc:#fff;background:var(--s1);border:1px solid var(--b1);border-left:3px solid var(--sc);border-radius:6px;padding:1.05rem 1.1rem;cursor:pointer;transition:background .15s,transform .15s}
+.sk-card:hover{background:var(--s2);transform:translateX(4px)}
+.sk-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem}
+.sk-info{display:flex;align-items:center;gap:.65rem}
+.sk-icon{font-size:.85rem;font-weight:700;color:var(--sc);width:1.4rem;flex-shrink:0;text-align:center}
+.sk-name{font-size:.88rem;font-weight:600;color:var(--t1);line-height:1.2}
+.sk-dsub{font-size:.6rem;color:var(--t3);margin-top:.1rem;letter-spacing:.03em}
+.sk-right{display:flex;flex-direction:column;align-items:flex-end;gap:.28rem}
+.sk-badge{font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sc);border:1px solid var(--sc);padding:.14rem .45rem;border-radius:3px;white-space:nowrap}
+.sk-badge.cert{background:var(--sc);color:var(--bg)}
+.sk-timed{font-size:.52rem;color:var(--t3);letter-spacing:.07em}
+.sk-bot{display:flex;align-items:center;gap:.65rem}
+.sk-trk{flex:1;height:3px;background:var(--b2);border-radius:2px;overflow:hidden}
+.sk-fill{height:100%;border-radius:2px;transition:width .7s ease}
+.sk-pct{font-size:.66rem;font-weight:700;color:var(--sc);min-width:2.5rem;text-align:right}
+.sk-go{font-family:var(--f);font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sc);background:transparent;border:1px solid var(--sc);padding:.26rem .6rem;border-radius:3px;cursor:pointer;transition:background .15s,color .15s}
+.sk-go:hover{background:var(--sc);color:var(--bg)}
+.gv{animation:gfade .28s ease}
+@keyframes gfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.g-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem}
+.g-back{font-family:var(--f);font-size:.7rem;color:var(--t3);background:none;border:none;cursor:pointer;padding:0;transition:color .15s}
+.g-back:hover{color:var(--t1)}
+.g-meta{display:flex;align-items:center;gap:.8rem}
+.g-prog{font-size:.65rem;color:var(--t3);letter-spacing:.05em}
+.g-streak{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:3px;transition:all .3s}
+.g-streak.cold{color:var(--t3);border:1px solid var(--b2)}
+.g-streak.warm{color:var(--sc);border:1px solid var(--sc)}
+.g-streak.hot{color:var(--bg);background:var(--sc);border:1px solid var(--sc)}
+.g-streak.fire{color:var(--bg);background:var(--sc);border:1px solid var(--sc);animation:hotpulse .5s ease infinite alternate}
+@keyframes hotpulse{from{opacity:.85}to{opacity:1}}
+.drain-wrap{height:3px;background:var(--b2);border-radius:6px 6px 0 0;overflow:hidden}
+.drain-bar{height:100%;width:100%;background:var(--sc);border-radius:6px 6px 0 0;transform-origin:left}
+.q-card{background:var(--s1);border:1px solid var(--b1);border-top:none;border-radius:0 0 6px 6px;padding:1.35rem 1.25rem 1.2rem;margin-bottom:.85rem;min-height:110px}
+.q-card.notimed{border-top:2px solid var(--sc);border-radius:6px}
+.q-prompt{font-size:.84rem;color:var(--t2);margin-bottom:.8rem;line-height:1.45}
+.q-label{color:var(--sc);font-weight:600}
+.q-stim{font-size:1.02rem;color:var(--t1);line-height:1.65;font-style:italic}
+.q-stim .bare{font-style:normal;font-size:1.15rem;font-weight:600;color:var(--t1)}
+.opts{display:grid;gap:.45rem;margin-bottom:.55rem}
+.opts.cols2{grid-template-columns:1fr 1fr}
+.opt{font-family:var(--f);font-size:.84rem;line-height:1.45;color:var(--t1);background:var(--s1);border:1px solid var(--b2);border-radius:5px;padding:.75rem .9rem;cursor:pointer;text-align:left;transition:background .13s,border-color .13s,color .13s}
+.opt:hover:not(:disabled){background:var(--s2);border-color:var(--sc)}
+.opt:disabled{cursor:not-allowed;pointer-events:none}
+.opt.correct{background:rgba(77,191,133,.08);border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:rgba(207,79,79,.08);border-color:var(--no);color:var(--no);animation:shk .26s ease}
+.opt.reveal{background:rgba(77,191,133,.05);border-color:var(--ok);color:var(--ok);opacity:.6}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.fb{padding:.75rem 1rem;border-radius:5px;font-size:.78rem;line-height:1.5;opacity:0;transition:opacity .2s;margin-bottom:.55rem}
+.fb.show{opacity:1}
+.fb.ok{background:rgba(77,191,133,.07);border:1px solid rgba(77,191,133,.2);color:var(--ok)}
+.fb.no{background:rgba(207,79,79,.07);border:1px solid rgba(207,79,79,.2);color:var(--no)}
+.g-next{font-family:var(--f);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--sc);border:none;width:100%;padding:.85rem;border-radius:5px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s,transform .1s}
+.g-next.ready{opacity:1;pointer-events:all}
+.g-next:hover{opacity:.88}
+.g-next:active{transform:scale(.99)}
+.res{animation:gfade .35s ease}
+.res-tag{font-size:.58rem;text-transform:uppercase;letter-spacing:.13em;margin-bottom:.5rem}
+.res-score{font-size:4rem;font-weight:700;line-height:1;color:var(--t1)}
+.res-sub{font-size:.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem;margin-bottom:1.5rem}
+.mastery-block{background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
+.mb-head{display:flex;justify-content:space-between;font-size:.58rem;color:var(--t3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.8rem}
+.mb-bar{position:relative;height:6px}
+.mb-base{height:6px;background:var(--b2);border-radius:3px}
+.mb-old{position:absolute;top:0;left:0;height:6px;border-radius:3px;opacity:.25}
+.mb-new{position:absolute;top:0;left:0;height:6px;border-radius:3px;width:0;transition:width .75s ease .3s}
+.mb-vals{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.65rem;color:var(--t3)}
+.xp-block{text-align:center;margin:1rem 0 1.5rem}
+.xp-big{font-size:2.4rem;font-weight:700;color:var(--t1)}
+.xp-big-l{font-size:.58rem;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:.12rem}
+.cert-banner{border-radius:6px;padding:.9rem 1.1rem;margin-bottom:1.2rem;text-align:center;animation:cPop .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes cPop{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+.cert-t{font-size:.92rem;font-weight:700;letter-spacing:.05em}
+.cert-s{font-size:.65rem;color:var(--t3);margin-top:.2rem}
+.res-acts{display:flex;gap:.6rem;margin-top:1.2rem}
+.btn-prim{flex:1;font-family:var(--f);font-size:.75rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bg);border:none;padding:.9rem;border-radius:5px;cursor:pointer;transition:opacity .15s,transform .1s}
+.btn-prim:hover{opacity:.88}
+.btn-prim:active{transform:scale(.98)}
+.btn-soft{font-family:var(--f);font-size:.75rem;color:var(--t3);background:transparent;border:1px solid var(--b2);padding:.9rem 1.2rem;border-radius:5px;cursor:pointer;transition:color .15s,border-color .15s}
+.btn-soft:hover{color:var(--t1);border-color:var(--b3)}
+.xpf{position:fixed;font-family:var(--f);font-size:.78rem;font-weight:700;pointer-events:none;animation:xpup .9s ease forwards;z-index:200;transform:translateX(-50%)}
+@keyframes xpup{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-48px)}}
+.streak-pop{position:fixed;top:50%;left:50%;font-family:var(--f);font-size:1rem;font-weight:700;letter-spacing:.14em;padding:.55rem 1.4rem;border-radius:4px;pointer-events:none;animation:spop .95s ease forwards;z-index:300;text-transform:uppercase}
+@keyframes spop{0%{opacity:0;transform:translate(-50%,-50%) scale(.8)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}60%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+@media(max-width:440px){#wrap{padding:1.2rem .85rem 4rem}.q-stim{font-size:.92rem}.opt{font-size:.8rem;padding:.68rem .8rem}.res-score{font-size:3rem}.speed-note{display:none}}
+</style>
+</head>
+<body>
+<div id="wrap"></div>
+<script>
+const SKILLS={
+  syntax:   {id:'syntax',   name:'Syntax Mastery',      sub:'Clauses & Structure',           icon:'{}',col:'#ddb94a',timed:true},
+  syllable: {id:'syllable', name:'Syllable & Stress',    sub:'Rhythm & Meter',                icon:'◉', col:'#4bbfd4',timed:true},
+  sound:    {id:'sound',    name:'Sound Patterns',       sub:'Alliteration & Assonance',      icon:'≈', col:'#9b7edf',timed:false},
+  rhyme:    {id:'rhyme',    name:'Rhyme Scheme',         sub:'Pattern & Structure',           icon:'∾', col:'#5ad4c8',timed:false},
+  rhetoric: {id:'rhetoric', name:'Rhetorical Devices',   sub:'Anaphora, Epistrophe, Chiasmus',icon:'∴', col:'#b87af5',timed:false},
+  figurative:{id:'figurative',name:'Figurative Language',sub:'Simile, Metaphor & More',      icon:'~', col:'#f0c060',timed:false},
+  pov:      {id:'pov',      name:'Point of View',        sub:'Perspective & Narrator',        icon:'◎', col:'#7eb8f7',timed:false},
+  voice:    {id:'voice',    name:'Active vs Passive',    sub:'Sentence Voice',                icon:'⇄', col:'#d97b48',timed:false},
+  verb:     {id:'verb',     name:'Verb Strength',        sub:'Weak vs Strong',                icon:'▸', col:'#4dbf85',timed:false},
+  punct:    {id:'punct',    name:'Punctuation',          sub:'Rules & Common Errors',         icon:'¶', col:'#e85c8a',timed:false},
+  modifier: {id:'modifier', name:'Modifiers',            sub:'Dangling & Misplaced',          icon:'↩', col:'#f07050',timed:false},
+  precision:{id:'precision',name:'Word Precision',       sub:'Strunk & White Essentials',     icon:'≠', col:'#90c860',timed:false},
+};
+
+const SKILL_GROUPS=[
+  {label:'TIMED DRILLS',ids:['syntax','syllable']},
+  {label:'SOUND & PATTERN',ids:['sound','rhyme','rhetoric']},
+  {label:'LANGUAGE',ids:['figurative','pov']},
+  {label:'SENTENCE CRAFT',ids:['voice','verb','punct','modifier','precision']},
+];
+
+const DRAIN_SPEEDS={slow:9000,med:6500,fast:4000};
+const CERT_THRESH=85;
+
+// ─────────────────────────────────────────────
+// QUESTION BANK
+// ─────────────────────────────────────────────
+const BANK=[
+
+// ══ SYNTAX L1: What is the subject? ══
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"Rain finds every crack."',
+ opts:['Rain','finds','every crack','crack'],ans:0,
+ ex:'"Rain" performs the action. It is the subject.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"She left at dawn."',
+ opts:['She','left','at dawn','dawn'],ans:0,
+ ex:'"She" does the leaving. Subject.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"Old letters burn slowly."',
+ opts:['Old letters','burn','slowly','letters burn'],ans:0,
+ ex:'"Old letters" — the full noun phrase — is the subject.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"Silence fills the room."',
+ opts:['Silence','fills','the room','fills the room'],ans:0,
+ ex:'"Silence" does the filling.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"His hands still shake."',
+ opts:['His hands','still','shake','he'],ans:0,
+ ex:'"His hands" is the complete noun phrase subject. "Still" is an adverb.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"Distance changes a person."',
+ opts:['Distance','changes','a person','person'],ans:0,
+ ex:'"Distance" drives the change.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"The last train left."',
+ opts:['The last train','left','train','last'],ans:0,
+ ex:'"The last train" — the whole noun phrase — is the subject.'},
+{sk:'syntax',lv:1,prompt:'What is the subject of this sentence?',
+ stim:'"Her voice still carries."',
+ opts:['Her voice','still','carries','hers'],ans:0,
+ ex:'"Her voice" is who/what the sentence is about.'},
+
+// ══ SYNTAX L2: Sentence type ══
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"She sang."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:0,
+ ex:'One subject, one verb, complete thought. Simple.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"She sang and he wept."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:1,
+ ex:'Two independent clauses joined by "and." Compound.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"She sang because she was afraid."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:2,
+ ex:'"Because she was afraid" is a dependent clause — can\'t stand alone. Complex.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"When the lights go out."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:3,
+ ex:'"When" makes this dependent. No independent clause to complete it. Fragment.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"You speak and I forget to breathe."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:1,
+ ex:'Two independent clauses joined by "and." Compound.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"Although they tried, it fell apart."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:2,
+ ex:'"Although they tried" is dependent; "it fell apart" is independent. Complex.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"The song. The silence after."',
+ opts:['Simple','Compound','Complex','Fragment(s)'],ans:3,
+ ex:'No verbs. Both are fragments — a stylistic choice, but structurally incomplete.'},
+{sk:'syntax',lv:2,prompt:'What kind of sentence is this?',
+ stim:'"I stayed, but she left before noon."',
+ opts:['Simple','Compound','Complex','Fragment'],ans:1,
+ ex:'"But" is a coordinating conjunction joining two independent clauses. Compound.'},
+
+// ══ SYNTAX L3: Independent vs Dependent ══
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"because she was afraid"',
+ opts:['Independent','Dependent'],ans:1,cols:2,
+ ex:'"Because" subordinates this clause. It needs something else to complete the thought.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"the door closed"',
+ opts:['Independent','Dependent'],ans:0,cols:2,
+ ex:'Subject + verb + complete meaning. No subordinator. Independent.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"although the night was long"',
+ opts:['Independent','Dependent'],ans:1,cols:2,
+ ex:'"Although" is a subordinating conjunction. Dependent.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"he never answered"',
+ opts:['Independent','Dependent'],ans:0,cols:2,
+ ex:'Complete thought, no subordinator. Independent.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"which is what she expected"',
+ opts:['Independent','Dependent'],ans:1,cols:2,
+ ex:'"Which" signals a relative clause — it modifies something outside itself. Dependent.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"the rain came anyway"',
+ opts:['Independent','Dependent'],ans:0,cols:2,
+ ex:'Subject + verb + adverb. No subordinator. Independent.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"whenever I hear that song"',
+ opts:['Independent','Dependent'],ans:1,cols:2,
+ ex:'"Whenever" is a subordinating conjunction. Dependent.'},
+{sk:'syntax',lv:3,prompt:'Independent or dependent clause?',
+ stim:'"they never spoke of it again"',
+ opts:['Independent','Dependent'],ans:0,cols:2,
+ ex:'Subject + verb + adverbials. Complete meaning. Independent.'},
+
+// ══ SYNTAX L4: Modifier type ══
+{sk:'syntax',lv:4,prompt:'What type of modifier is in brackets?',
+ stim:'"[Quietly], she closed the door."',
+ opts:['Adjective','Adverb','Prepositional phrase','Appositive'],ans:1,
+ ex:'"Quietly" modifies the verb "closed" — tells how she did it. Adverb.'},
+{sk:'syntax',lv:4,prompt:'What type of modifier is in brackets?',
+ stim:'"The [broken] clock still rings."',
+ opts:['Adjective','Adverb','Prepositional phrase','Appositive'],ans:0,
+ ex:'"Broken" modifies the noun "clock." Adjective.'},
+{sk:'syntax',lv:4,prompt:'What type of modifier is in brackets?',
+ stim:'"She waits [at the end of the hall]."',
+ opts:['Adjective','Adverb','Prepositional phrase','Appositive'],ans:2,
+ ex:'"At the end of the hall" is a prepositional phrase modifying where she waits.'},
+{sk:'syntax',lv:4,prompt:'What type of modifier is in brackets?',
+ stim:'"My brother, [a careful man], said nothing."',
+ opts:['Adjective','Adverb','Prepositional phrase','Appositive'],ans:3,
+ ex:'An appositive renames or explains a noun. "A careful man" renames "my brother."'},
+{sk:'syntax',lv:4,prompt:'What type of modifier is in brackets?',
+ stim:'"He fell [without a sound]."',
+ opts:['Adjective','Adverb','Prepositional phrase','Appositive'],ans:2,
+ ex:'"Without a sound" is a prepositional phrase modifying how he fell.'},
+{sk:'syntax',lv:4,prompt:'What type of modifier is in brackets?',
+ stim:'"She ran [quickly] through the dark."',
+ opts:['Adjective','Adverb','Prepositional phrase','Appositive'],ans:1,
+ ex:'"Quickly" modifies the verb "ran." Adverb.'},
+
+// ══ SYLLABLE L1: Count syllables (bare word — no hints) ══
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">quiet</span>',
+ opts:['1','2','3','4'],ans:1,cols:2,
+ ex:'qui·et — 2 syllables. Two separate vowel sounds.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">rain</span>',
+ opts:['1','2','3','4'],ans:0,cols:2,
+ ex:'rain — 1 syllable. One vowel sound: /eɪ/.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">memory</span>',
+ opts:['2','3','4','5'],ans:1,cols:2,
+ ex:'mem·o·ry — 3 syllables. Don\'t let the spelling mislead you.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">beautiful</span>',
+ opts:['2','3','4','5'],ans:1,cols:2,
+ ex:'beau·ti·ful — 3 syllables.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">distance</span>',
+ opts:['1','2','3','4'],ans:1,cols:2,
+ ex:'dis·tance — 2 syllables.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">terrified</span>',
+ opts:['2','3','4','5'],ans:1,cols:2,
+ ex:'ter·ri·fied — 3 syllables.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">everything</span>',
+ opts:['2','3','4','5'],ans:1,cols:2,
+ ex:'ev·ery·thing — 3 syllables. "Every" compresses in fast speech but its base is 3.'},
+{sk:'syllable',lv:1,prompt:'How many syllables does this word have?',
+ stim:'<span class="bare">love</span>',
+ opts:['1','2','3','4'],ans:0,cols:2,
+ ex:'love — 1 syllable. The silent "e" adds no sound.'},
+
+// ══ SYLLABLE L2: Which syllable carries the stress? ══
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">remember</span>',
+ opts:['1st syllable','2nd syllable','3rd syllable'],ans:1,
+ ex:'re·MEM·ber — the middle syllable is longest and loudest in natural speech.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">further</span>',
+ opts:['1st syllable','2nd syllable'],ans:0,cols:2,
+ ex:'FUR·ther — stress falls on the first syllable. A trochee.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">tonight</span>',
+ opts:['1st syllable','2nd syllable'],ans:1,cols:2,
+ ex:'to·NIGHT — the second syllable is heavy. Strong iambic foot.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">always</span>',
+ opts:['1st syllable','2nd syllable'],ans:0,cols:2,
+ ex:'AL·ways — stress on the first syllable. Trochee.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">believe</span>',
+ opts:['1st syllable','2nd syllable'],ans:1,cols:2,
+ ex:'be·LIEVE — iamb. Second syllable stressed.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">silence</span>',
+ opts:['1st syllable','2nd syllable'],ans:0,cols:2,
+ ex:'SI·lence — stress on the first syllable. Trochee.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">alone</span>',
+ opts:['1st syllable','2nd syllable'],ans:1,cols:2,
+ ex:'a·LONE — the second vowel is long and stressed. Iamb.'},
+{sk:'syllable',lv:2,prompt:'Which syllable carries the primary stress?',
+ stim:'<span class="bare">bottom</span>',
+ opts:['1st syllable','2nd syllable'],ans:0,cols:2,
+ ex:'BOT·tom — primary stress on the first syllable. Trochee.'},
+
+// ══ SYLLABLE L3: Identify the foot ══
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"alone"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:0,
+ ex:'"a·LONE" — weak then strong. The most common foot in English conversation.'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"heaven"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:1,
+ ex:'"HEA·ven" — strong then weak. A trochee falls and lands.'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"on the road"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:2,
+ ex:'"on the ROAD" — two weak syllables build into the stress. Anapest.'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"happily"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:3,
+ ex:'"HAP·pi·ly" — three syllables falling from the stress. Dactyl.'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"beside"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:0,
+ ex:'"be·SIDE" — weak then strong. Iamb.'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"tiger"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:1,
+ ex:'"TI·ger" — strong then weak. Trochee. "Tiger Tiger, burning bright."'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"in the dark"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:2,
+ ex:'"in the DARK" — two unstressed syllables, then the stress. Anapest.'},
+{sk:'syllable',lv:3,prompt:'What metrical foot does this word or phrase form?',
+ stim:'"carefully"',
+ opts:['Iamb (weak-STRONG)','Trochee (STRONG-weak)','Anapest (weak-weak-STRONG)','Dactyl (STRONG-weak-weak)'],ans:3,
+ ex:'"CARE·ful·ly" — stress on the first of three syllables. Dactyl.'},
+
+// ══ SOUND L1: Alliteration present? ══
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"Blood beats beneath a broken bridge."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'B repeated at the start of four words. Strong alliteration.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"The rain came and washed it all away."',
+ opts:['Yes','No'],ans:1,cols:2,
+ ex:'No repeated initial consonant sounds. No alliteration.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"Love leaves like light."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'L repeated: love, leaves, like, light. Four-beat alliterative line.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"She opened the window and looked outside."',
+ opts:['Yes','No'],ans:1,cols:2,
+ ex:'No repeated initial consonants. No alliteration.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"Cold coffee. Cracked phone. Same corner."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'C repeated: cold, coffee, cracked, corner. Alliteration reinforcing monotony.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"Slow smoke slips away."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'S repeated at the start of three words. Alliteration.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"Distance is only distance."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'D repeated: distance, distance. Even structural echo counts.'},
+{sk:'sound',lv:1,prompt:'Does this line use alliteration?',
+ stim:'"He tried to remember her voice."',
+ opts:['Yes','No'],ans:1,cols:2,
+ ex:'No initial consonant repetition. No alliteration.'},
+
+// ══ SOUND L2: Name the device ══
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"The low road goes home slow."',
+ opts:['Alliteration','Assonance','Consonance','End rhyme'],ans:1,
+ ex:'Repeated /oʊ/ vowel: low, road, goes, home, slow. Matching vowels, not consonants — assonance.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"The lamp was dim. His dreams were grim."',
+ opts:['Alliteration','Assonance','Internal rhyme','End rhyme'],ans:3,
+ ex:'"Dim" and "grim" share the same ending sound. End rhyme.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"Pitter-patter on the roof."',
+ opts:['Alliteration','Assonance','Onomatopoeia','Consonance'],ans:2,
+ ex:'"Pitter-patter" mimics the actual sound of rain. Onomatopoeia.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"Blank and black, the locked-out dark."',
+ opts:['Alliteration','Assonance','Consonance','End rhyme'],ans:2,
+ ex:'K sounds in non-initial positions: blank, black, locked, dark. Consonance — repeated consonants anywhere in the word.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"I try to hide the tide inside."',
+ opts:['Alliteration','Assonance','Internal rhyme','Consonance'],ans:2,
+ ex:'"Hide," "tide," and "inside" rhyme within the same line. Internal rhyme.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"Fleet feet sweep by sleeping geese."',
+ opts:['Alliteration only','Assonance only','Consonance only','Both alliteration and assonance'],ans:3,
+ ex:'F/S alliteration + /iː/ vowel assonance throughout. Both devices working simultaneously.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"Rain fades, strange days, late and grey."',
+ opts:['Alliteration','Assonance','Consonance','End rhyme'],ans:1,
+ ex:'/eɪ/ vowel throughout: rain, fades, strange, days, late, grey. Assonance.'},
+{sk:'sound',lv:2,prompt:'What sound device is at work?',
+ stim:'"Green leaves breathe and teem with heat."',
+ opts:['Alliteration','Assonance','Consonance','End rhyme'],ans:1,
+ ex:'/iː/ vowel: green, leaves, breathe, teem, heat. The high front vowel creates a bright sound color.'},
+
+// ══ SOUND L3: Identify the vowel pattern ══
+{sk:'sound',lv:3,prompt:'What is the dominant vowel sound creating the assonance?',
+ stim:'"Light flies by like a kite in high sky."',
+ opts:['/aɪ/ as in "mine"','/ɛ/ as in "bed"','/oʊ/ as in "go"','/uː/ as in "moon"'],ans:0,
+ ex:'"Light, flies, kite, high, sky" — all carry the /aɪ/ diphthong.'},
+{sk:'sound',lv:3,prompt:'What is the dominant vowel sound creating the assonance?',
+ stim:'"The slow road home goes on and on."',
+ opts:['/aɪ/ as in "mine"','/oʊ/ as in "go"','/æ/ as in "cat"','/ɪ/ as in "sit"'],ans:1,
+ ex:'"Slow, road, home, goes" — the /oʊ/ vowel dominates. Rounded, heavy.'},
+{sk:'sound',lv:3,prompt:'What vowel sound appears most in this line?',
+ stim:'"She stayed the same as summer rain."',
+ opts:['/eɪ/ as in "face"','/iː/ as in "see"','/aɪ/ as in "mine"','/ɒ/ as in "hot"'],ans:0,
+ ex:'"Stayed, same, rain" — the /eɪ/ diphthong threads through.'},
+{sk:'sound',lv:3,prompt:'What vowel sound creates the assonance?',
+ stim:'"The moon moved through the room alone."',
+ opts:['/uː/ as in "moon"','/oʊ/ as in "go"','/aʊ/ as in "out"','/ɪ/ as in "sit"'],ans:0,
+ ex:'"Moon, moved, through, room" — the /uː/ vowel creates a dark, hollow resonance.'},
+
+// ══ RHYME L1: Identify AABB vs ABAB ══
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"The fire burned all night<br>and made the shadows bright<br>by morning nothing stayed<br>the ashes slowly grayed"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:0,
+ ex:'night/bright = AA, stayed/grayed = BB. The first two lines rhyme together, then the next two. AABB.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"She drank her coffee slow<br>and watched the window bleed<br>the sun was burning low<br>she tried but couldn\'t read"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:1,
+ ex:'slow/low = A, bleed/read = B. Lines 1 and 3 rhyme; lines 2 and 4 rhyme. ABAB.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"I walked the long way home<br>and counted every mile<br>the city turned to foam<br>I hadn\'t cried in a while"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:1,
+ ex:'home/foam = A, mile/while = B. Lines 1 & 3 rhyme, lines 2 & 4 rhyme. ABAB.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"She left before the dawn<br>her coat still on the floor<br>a note on every door<br>like she\'d never be gone"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:2,
+ ex:'dawn/gone = A (lines 1 & 4), floor/door = B (lines 2 & 3). The rhymes wrap around. ABBA.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"The river runs to stone<br>and carves the banks each year<br>I have been here alone<br>and still I feel the fear"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:1,
+ ex:'stone/alone = A, year/fear = B. Lines 1 & 3, lines 2 & 4. ABAB.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"Cold hands, warm mouth<br>the car points south<br>I\'ve been this way before<br>I know this door"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:0,
+ ex:'mouth/south = AA, before/door = BB. Adjacent rhymes. AABB.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"He said he\'d write me every day<br>I still check the box<br>his words have all decayed<br>like flowers, like rocks"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:3,
+ ex:'day/decayed = A (lines 1 & 3), box and rocks = B (lines 2 & 4) but only line 4 rhymes with line 2. ABCB — only the second and fourth lines rhyme.'},
+{sk:'rhyme',lv:1,prompt:'What rhyme scheme does this stanza use?',
+ stim:'"I called. You didn\'t answer.<br>I wrote. You never read.<br>The whole thing got no harder<br>than knowing you\'re not dead"',
+ opts:['AABB','ABAB','ABBA','ABCB'],ans:1,
+ ex:'answer/harder = A (slant), read/dead = B. Lines 1 & 3, 2 & 4. ABAB.'},
+
+// ══ RHYME L2: Perfect vs Slant, Forced vs Earned ══
+{sk:'rhyme',lv:2,prompt:'Is this a perfect rhyme or a slant rhyme?',
+ stim:'"fire" / "desire"',
+ opts:['Perfect rhyme','Slant rhyme'],ans:0,cols:2,
+ ex:'The last stressed vowel and all following sounds match exactly: /aɪər/. Perfect rhyme.'},
+{sk:'rhyme',lv:2,prompt:'Is this a perfect rhyme or a slant rhyme?',
+ stim:'"home" / "alone"',
+ opts:['Perfect rhyme','Slant rhyme'],ans:1,cols:2,
+ ex:'Similar vowels (/oʊ/) but different endings (-m vs -n). Close but not exact. Slant rhyme.'},
+{sk:'rhyme',lv:2,prompt:'Is this a perfect rhyme or a slant rhyme?',
+ stim:'"rain" / "pain"',
+ opts:['Perfect rhyme','Slant rhyme'],ans:0,cols:2,
+ ex:'The /eɪn/ sound matches exactly. Perfect rhyme — and one of the most overused in lyrics.'},
+{sk:'rhyme',lv:2,prompt:'Is this a perfect rhyme or a slant rhyme?',
+ stim:'"light" / "fight"',
+ opts:['Perfect rhyme','Slant rhyme'],ans:0,cols:2,
+ ex:'Exact match on /aɪt/. Perfect rhyme.'},
+{sk:'rhyme',lv:2,prompt:'Is this a perfect rhyme or a slant rhyme?',
+ stim:'"stone" / "gone"',
+ opts:['Perfect rhyme','Slant rhyme'],ans:1,cols:2,
+ ex:'Similar but not exact vowel sounds. "Stone" = /stoʊn/, "gone" = /ɡɒn/. Slant rhyme.'},
+{sk:'rhyme',lv:2,prompt:'Which of these is the deeper, less obvious rhyme for "remember"?',
+ stim:'Target word: "remember"',
+ opts:['December','dismember','ember','surrender'],ans:1,
+ ex:'"Dismember" adds a violent/destructive metaphor — taking apart what was whole. The rhyme enhances the meaning. Deeper than the obvious choices.'},
+{sk:'rhyme',lv:2,prompt:'Which version feels like the rhyme was earned, not forced?',
+ stim:'Target rhyme: "fire"',
+ opts:['"I burned up in her fire / consumed by desire"','"I rewired my whole life for her / still feeling the fire"'],ans:1,
+ ex:'In option B, the meaning led to "rewired" which then creates a fresh metaphor (electrical system/fire). The rhyme unlocks something. In A, "desire" is the most obvious move and doesn\'t add meaning.'},
+{sk:'rhyme',lv:2,prompt:'Is this end rhyme or internal rhyme?',
+ stim:'"I try to hide the tide inside my chest."',
+ opts:['End rhyme','Internal rhyme'],ans:1,cols:2,
+ ex:'"Hide," "tide," and "inside" all rhyme within the body of the line, not at the ends. Internal rhyme.'},
+
+// ══ RHYME L3: Complex schemes and identification ══
+{sk:'rhyme',lv:3,prompt:'What is the rhyme scheme of this Shakespearean sonnet excerpt?',
+ stim:'"Shall I compare thee to a summer\'s day? (A)<br>Thou art more lovely and more temperate. (B)<br>Rough winds do shake the darling buds of May, (A)<br>And summer\'s lease hath all too short a date." (B)',
+ opts:['ABAB','AABB','ABBA','ABCD'],ans:0,
+ ex:'day/May = A, temperate/date = B (slant). Lines 1 & 3, 2 & 4. ABAB — the standard Shakespearean quatrain.'},
+{sk:'rhyme',lv:3,prompt:'What is this rhyme scheme called?',
+ stim:'"When I have fears that I may cease to be (A)<br>Before my pen has gleaned my teeming brain, (B)<br>Before high-pilèd books, in charactery, (A)<br>Hold like rich garners the full-ripened grain" (B)',
+ opts:['ABAB','AABB','ABBA','ABCB'],ans:0,
+ ex:'be/charactery = A, brain/grain = B. Alternating rhyme. ABAB.'},
+{sk:'rhyme',lv:3,prompt:'This is an example of what?',
+ stim:'"I try to hide the tide inside — / that pull, that cold, that slide."',
+ opts:['End rhyme','Internal rhyme','Alliteration','Assonance'],ans:1,
+ ex:'"Hide," "tide," "inside" rhyme within the line or across the caesura, not at the end. Internal rhyme.'},
+{sk:'rhyme',lv:3,prompt:'What technique is this an example of?',
+ stim:'"The words rhyme visually on the page but sound different when spoken:<br>\'love\' / \'move\' / \'prove\'"',
+ opts:['Perfect rhyme','Slant rhyme','Eye rhyme','Assonance'],ans:2,
+ ex:'Love/move/prove look like they should rhyme but don\'t sound the same. Eye rhyme — a visual coincidence, not a sonic one.'},
+
+// ══ RHETORIC L1: Identify anaphora ══
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"We shall fight on the beaches, we shall fight on the landing grounds, we shall fight in the fields."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"We shall fight" repeats at the start of each clause. Anaphora — repetition at the beginning of successive units.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"She left. She didn\'t explain. She didn\'t come back."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"She" at the start of each clause. Anaphora. The repetition creates rhythmic finality.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"The rain was cold. The wind came in through the crack. Everything smelled like rust."',
+ opts:['Yes','No'],ans:1,cols:2,
+ ex:'No repeated phrase at the start of successive clauses. No anaphora.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"I have a dream that one day... I have a dream that one day... I have a dream..."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'The most famous example in American rhetoric. "I have a dream" repeated at the start. Anaphora.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"Every night I close my eyes. Every night I hear your voice. Every night I wake up alone."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"Every night" repeated at the start of each sentence. Anaphora — and a common lyrical device.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"She was kind, she was cruel, and she was gone before I understood either."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"She was" repeated at the start of successive clauses. Anaphora.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"The season changed. Leaves fell slowly. Nobody called."',
+ opts:['Yes','No'],ans:1,cols:2,
+ ex:'Each clause begins differently. No anaphora.'},
+{sk:'rhetoric',lv:1,prompt:'Does this passage use anaphora?',
+ stim:'"Not the rain, not the dark, not the cold, not the distance."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"Not the" repeated at the start of each unit. Anaphora with negation — creates accumulating weight.'},
+
+// ══ RHETORIC L2: Anaphora vs Epistrophe ══
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"I came. I saw. I conquered."',
+ opts:['Anaphora','Epistrophe'],ans:0,cols:2,
+ ex:'"I" repeats at the start of each clause. Anaphora — repetition at the beginning.'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"...of the people, by the people, for the people."',
+ opts:['Anaphora','Epistrophe'],ans:1,cols:2,
+ ex:'"the people" repeats at the end of each unit. Epistrophe — repetition at the ending.'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"When I\'m gone, when I\'m forgotten, when I\'m dust."',
+ opts:['Anaphora','Epistrophe'],ans:0,cols:2,
+ ex:'"When I\'m" repeated at the start. Anaphora.'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"She was everything I wanted, everything I feared, everything I lost."',
+ opts:['Anaphora','Epistrophe'],ans:0,cols:2,
+ ex:'"Everything I" repeats at the start of each unit. Anaphora.'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness."',
+ opts:['Anaphora','Epistrophe'],ans:0,cols:2,
+ ex:'"It was" at the start of each clause. Anaphora — also uses antithesis.'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"I can\'t sleep without you. I can\'t breathe without you. I can\'t think without you."',
+ opts:['Anaphora','Epistrophe'],ans:0,cols:2,
+ ex:'"I can\'t" at the start. Anaphora. (Also: "without you" at the end is epistrophe — both can operate simultaneously.)'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"We didn\'t speak. We should have spoken. We never spoke."',
+ opts:['Anaphora','Epistrophe'],ans:1,cols:2,
+ ex:'"Spoke" (in various forms) at the end of each clause. Epistrophe — repetition at the end.'},
+{sk:'rhetoric',lv:2,prompt:'Anaphora or epistrophe?',
+ stim:'"Give me liberty, or give me death."',
+ opts:['Anaphora','Epistrophe'],ans:0,cols:2,
+ ex:'"Give me" repeated at the start of each unit. Anaphora.'},
+
+// ══ RHETORIC L3: Chiasmus ══
+{sk:'rhetoric',lv:3,prompt:'Is this an example of chiasmus?',
+ stim:'"Ask not what your country can do for you — ask what you can do for your country."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'The grammatical structure is reversed: [subject][can do for][object] flips to [object][can do for][subject]. Classic chiasmus.'},
+{sk:'rhetoric',lv:3,prompt:'Is this an example of chiasmus?',
+ stim:'"Fair is foul, and foul is fair."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"Fair is foul / foul is fair" — the terms swap positions. Chiasmus. Shakespeare used it to signal moral inversion.'},
+{sk:'rhetoric',lv:3,prompt:'Is this an example of chiasmus?',
+ stim:'"She lived for music. Music was her whole life."',
+ opts:['Yes','No'],ans:1,cols:2,
+ ex:'Both sentences are about music, but the structure doesn\'t reverse — it just repeats the theme. No chiasmus.'},
+{sk:'rhetoric',lv:3,prompt:'Is this an example of chiasmus?',
+ stim:'"You forget what you want to remember, and remember what you want to forget."',
+ opts:['Yes','No'],ans:0,cols:2,
+ ex:'"Forget...remember / remember...forget" — the two key verbs exchange positions. Chiasmus.'},
+{sk:'rhetoric',lv:3,prompt:'What device is used here?',
+ stim:'"I needed her before I knew her. I knew her before I loved her. I loved her before I lost her."',
+ opts:['Chiasmus','Anaphora','Epistrophe','Anadiplosis'],ans:3,
+ ex:'Each clause ends with a word that begins the next ("knew her... I knew her"). This is anadiplosis — a chain device where the last word of one unit becomes the first of the next.'},
+{sk:'rhetoric',lv:3,prompt:'What device is used here?',
+ stim:'"Every night the same dream. Every dream the same end. Every end the same face."',
+ opts:['Chiasmus','Anaphora','Anadiplosis','Epistrophe'],ans:2,
+ ex:'"The same dream / every dream" — the end of each unit feeds into the beginning of the next. Anadiplosis creates a chain that feels inevitable.'},
+{sk:'rhetoric',lv:3,prompt:'What device creates the structure here?',
+ stim:'"I loved and lost. I lost and learned. I learned and left."',
+ opts:['Chiasmus','Anaphora','Anadiplosis','Epistrophe'],ans:2,
+ ex:'The last verb of each clause becomes the first of the next: lost/lost, learned/learned, left. Anadiplosis — and it creates a narrative arc through the chain.'},
+{sk:'rhetoric',lv:3,prompt:'What is the primary rhetorical device?',
+ stim:'"Some people make things happen. Some watch things happen. Some wonder what happened."',
+ opts:['Chiasmus','Anaphora','Epistrophe','Anadiplosis'],ans:1,
+ ex:'"Some" + verb structure repeats at the start of each unit. Anaphora. The escalating passivity is what makes it hit.'},
+
+// ══ FIGURATIVE L1: Simile vs Metaphor ══
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"Her voice is like honey."',
+ opts:['Simile','Metaphor'],ans:0,cols:2,
+ ex:'Contains "like" — a simile makes the comparison explicit.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"Her voice is honey."',
+ opts:['Simile','Metaphor'],ans:1,cols:2,
+ ex:'No "like" or "as" — the comparison is direct. Her voice IS honey. Metaphor.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"Grief is a stone in the chest."',
+ opts:['Simile','Metaphor'],ans:1,cols:2,
+ ex:'"Grief IS a stone" — no comparative word. Direct metaphor.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"He moves like water through a crowd."',
+ opts:['Simile','Metaphor'],ans:0,cols:2,
+ ex:'"Like water" — the "like" signals a simile.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"Time is a thief."',
+ opts:['Simile','Metaphor'],ans:1,cols:2,
+ ex:'"Time IS a thief" — direct equation, no comparative word. Metaphor.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"She burned like a torch through everything she touched."',
+ opts:['Simile','Metaphor'],ans:0,cols:2,
+ ex:'"Burned like a torch" — the "like" makes it a simile.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"Memory is a faulty camera."',
+ opts:['Simile','Metaphor'],ans:1,cols:2,
+ ex:'Direct equation: memory IS a faulty camera. Metaphor.'},
+{sk:'figurative',lv:1,prompt:'Simile or metaphor?',
+ stim:'"The city hummed like a refrigerator left on overnight."',
+ opts:['Simile','Metaphor'],ans:0,cols:2,
+ ex:'"Like a refrigerator" — simile. The specific mundane comparison is what makes this one interesting.'},
+
+// ══ FIGURATIVE L2: Name the device ══
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"The wind whispered her name through the trees."',
+ opts:['Simile','Metaphor','Personification','Hyperbole'],ans:2,
+ ex:'The wind is given a human action: whispering. Personification — attributing human qualities to non-human things.'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"I\'ve told you a million times."',
+ opts:['Simile','Metaphor','Personification','Hyperbole'],ans:3,
+ ex:'Not literally a million times. Exaggeration for emphasis. Hyperbole.'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"All hands on deck."',
+ opts:['Simile','Synecdoche','Personification','Hyperbole'],ans:1,
+ ex:'"Hands" stands in for whole people. Using a part to represent the whole. Synecdoche.'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"The White House announced a new policy."',
+ opts:['Simile','Synecdoche','Metonymy','Hyperbole'],ans:2,
+ ex:'"White House" stands in for the President or administration — not a part of the thing, but something closely associated with it. Metonymy.'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"The road goes on forever and the party never ends."',
+ opts:['Simile','Metaphor','Personification','Hyperbole'],ans:3,
+ ex:'Neither is literally true. Deliberate exaggeration for emotional effect. Hyperbole. (Also a Waylon Jennings lyric.)'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"The stars were diamonds scattered on black velvet."',
+ opts:['Simile','Metaphor','Personification','Hyperbole'],ans:1,
+ ex:'"Stars WERE diamonds" — direct equation without "like" or "as." Extended metaphor.'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"The fog comes in on little cat feet."',
+ opts:['Simile','Metaphor','Personification','Synecdoche'],ans:2,
+ ex:'Fog is given cat-like physical qualities. Personification — Carl Sandburg.'},
+{sk:'figurative',lv:2,prompt:'What figurative device is used?',
+ stim:'"He gave his sweat and blood to that project."',
+ opts:['Simile','Synecdoche','Metonymy','Hyperbole'],ans:1,
+ ex:'"Sweat and blood" = parts of his body/effort standing for his whole commitment. Synecdoche.'},
+
+// ══ FIGURATIVE L3: Metonymy vs Synecdoche + extended ══
+{sk:'figurative',lv:3,prompt:'Synecdoche or metonymy?',
+ stim:'"The suits on Wall Street don\'t understand real people."',
+ opts:['Synecdoche','Metonymy'],ans:0,cols:2,
+ ex:'"Suits" = a part of the bankers (what they wear). Using a part (clothing) to represent the whole person. Synecdoche.'},
+{sk:'figurative',lv:3,prompt:'Synecdoche or metonymy?',
+ stim:'"The pen is mightier than the sword."',
+ opts:['Synecdoche','Metonymy'],ans:1,cols:2,
+ ex:'"Pen" = writing/ideas (associated tool). "Sword" = military force (associated tool). Neither is a part of the whole — both are associated instruments. Metonymy.'},
+{sk:'figurative',lv:3,prompt:'Synecdoche or metonymy?',
+ stim:'"Give us this day our daily bread."',
+ opts:['Synecdoche','Metonymy'],ans:0,cols:2,
+ ex:'"Bread" = a specific food standing for all food/sustenance. Part representing the whole. Synecdoche.'},
+{sk:'figurative',lv:3,prompt:'Synecdoche or metonymy?',
+ stim:'"The crown has spoken."',
+ opts:['Synecdoche','Metonymy'],ans:1,cols:2,
+ ex:'"Crown" = the monarchy. The crown is a symbol associated with royalty, not a part of the king. Metonymy.'},
+{sk:'figurative',lv:3,prompt:'What is this an example of?',
+ stim:'"She was ice in winter, fire in summer, and somewhere in between, something I could never name."',
+ opts:['Extended metaphor','Simile','Personification','Synecdoche'],ans:0,
+ ex:'A single metaphor (she = elemental forces) sustained and developed across multiple clauses. Extended metaphor.'},
+{sk:'figurative',lv:3,prompt:'What is this an example of?',
+ stim:'"Life is a journey. I\'ve been walking a long time. The road has been rough. I can see the end from here."',
+ opts:['Extended metaphor','Anaphora','Hyperbole','Synecdoche'],ans:0,
+ ex:'The journey metaphor is established and then elaborated through walking, road, end. Extended metaphor — one vehicle sustained through multiple tenor comparisons.'},
+
+// ══ POV L1: Identify person ══
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"I walked into the room and everything stopped."',
+ opts:['First person','Second person','Third person'],ans:0,
+ ex:'"I" is the narrator experiencing events directly. First person.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"She turned away from the window without speaking."',
+ opts:['First person','Second person','Third person'],ans:2,
+ ex:'"She" — the narrator describes a character from outside. Third person.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"You never quite forget the smell of someone\'s jacket."',
+ opts:['First person','Second person','Third person'],ans:1,
+ ex:'"You" addresses the reader directly. Second person — unusual and intimate. Common in song lyrics.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"They drove north for two days without stopping."',
+ opts:['First person','Second person','Third person'],ans:2,
+ ex:'"They" — observing characters from outside. Third person.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"We stayed until the last light left the room."',
+ opts:['First person (plural)','Second person','Third person'],ans:0,
+ ex:'"We" is first person plural — the narrator is part of the group.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"He said nothing. He always said nothing."',
+ opts:['First person','Second person','Third person'],ans:2,
+ ex:'"He" — the narrator observes from outside the character. Third person.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"You think you know what you want until you don\'t."',
+ opts:['First person','Second person','Third person'],ans:1,
+ ex:'"You" — directly addressing the reader/listener. Second person, which creates an unusual intimacy or accusation depending on context.'},
+{sk:'pov',lv:1,prompt:'What point of view is this written in?',
+ stim:'"My hands were cold. My coat was thin. My reasons were thinner."',
+ opts:['First person','Second person','Third person'],ans:0,
+ ex:'"My" — the narrator speaks from inside the experience. First person.'},
+
+// ══ POV L2: Limited vs Omniscient ══
+{sk:'pov',lv:2,prompt:'Limited or omniscient narration?',
+ stim:'"She didn\'t know why he\'d gone quiet. She assumed it was her fault, the way she always did."',
+ opts:['Limited (one character\'s perspective)','Omniscient (knows all characters)'],ans:0,
+ ex:'We only know her thoughts and assumptions. We don\'t know his actual reason. Limited third-person.'},
+{sk:'pov',lv:2,prompt:'Limited or omniscient narration?',
+ stim:'"She assumed it was her fault. He was, in fact, thinking about something else entirely."',
+ opts:['Limited (one character\'s perspective)','Omniscient (knows all characters)'],ans:1,
+ ex:'We now have access to both characters\' internal states. Omniscient narrator.'},
+{sk:'pov',lv:2,prompt:'Limited or omniscient narration?',
+ stim:'"He watched her leave. He did not know she was already planning to come back."',
+ opts:['Limited (one character\'s perspective)','Omniscient (knows all characters)'],ans:1,
+ ex:'We know his observing AND her private plan. Access to both = omniscient.'},
+{sk:'pov',lv:2,prompt:'Limited or omniscient narration?',
+ stim:'"She had been waiting for three hours. She tried not to check her phone. She failed."',
+ opts:['Limited (one character\'s perspective)','Omniscient (knows all characters)'],ans:0,
+ ex:'We\'re entirely inside her experience — her waiting, her effort, her failure. Limited.'},
+{sk:'pov',lv:2,prompt:'Limited or omniscient narration?',
+ stim:'"What none of them knew was that the letter had arrived two weeks earlier."',
+ opts:['Limited (one character\'s perspective)','Omniscient (knows all characters)'],ans:1,
+ ex:'"None of them knew" — the narrator has information beyond any single character. Omniscient.'},
+{sk:'pov',lv:2,prompt:'Limited or omniscient narration?',
+ stim:'"She thought he looked tired. She had no idea what was actually keeping him up at night."',
+ opts:['Limited (one character\'s perspective)','Omniscient (knows all characters)'],ans:0,
+ ex:'We only know her observations and her ignorance. We don\'t get his inner life. Limited.'},
+{sk:'pov',lv:2,prompt:'In a lyric, why might a writer choose second person ("you") over first person ("I")?',
+ stim:'"You always leave before the hard part starts."',
+ opts:['To implicate the listener directly','To distance the narrator from the emotion','Both are valid reasons','Second person is never effective in lyrics'],ans:2,
+ ex:'Second person can accuse ("you always") or universalize ("you know how it feels"). Both uses are valid — the ambiguity between addressing a specific "you" and a universal "you" is part of why it works in song.'},
+
+// ══ VOICE L1: Active or Passive? ══
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"She broke the glass."',
+ opts:['Active','Passive'],ans:0,cols:2,
+ ex:'The subject (she) performs the action directly. Active.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"The glass was broken."',
+ opts:['Active','Passive'],ans:1,cols:2,
+ ex:'The subject receives the action — and the agent is absent. Passive.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"He was left behind."',
+ opts:['Active','Passive'],ans:1,cols:2,
+ ex:'"Was left" = passive. He receives the action; the leaver is erased.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"The door closed."',
+ opts:['Active','Passive'],ans:0,cols:2,
+ ex:'The door (subject) performs the closing. Active — even with an unusual agent.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"Her name was called."',
+ opts:['Active','Passive'],ans:1,cols:2,
+ ex:'"Was called" — passive. The caller is absent. That erasure is doing emotional work.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"I remembered everything."',
+ opts:['Active','Passive'],ans:0,cols:2,
+ ex:'"I" does the remembering. Active.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"Everything was remembered."',
+ opts:['Active','Passive'],ans:1,cols:2,
+ ex:'"Was remembered" — the agent who remembered is not stated. The act floats.'},
+{sk:'voice',lv:1,prompt:'Active or passive voice?',
+ stim:'"Rain washed the streets clean."',
+ opts:['Active','Passive'],ans:0,cols:2,
+ ex:'"Rain" performs the action. Active and concrete.'},
+
+// ══ VOICE L2: Which is stronger? ══
+{sk:'voice',lv:2,prompt:'Which version is stronger for a lyric about grief?',
+ stim:'',
+ opts:['A: "I carried the weight."','B: "The weight was carried."'],ans:0,
+ ex:'"I carried" gives the speaker agency — you feel the burden as a choice. Passive erases the carrier.'},
+{sk:'voice',lv:2,prompt:'Which version creates more tension about abandonment?',
+ stim:'',
+ opts:['A: "She left me."','B: "I was left."'],ans:1,
+ ex:'"I was left" — the passive erasure of the agent creates impact. The leaving happens without a clear perpetrator.'},
+{sk:'voice',lv:2,prompt:'Which is more visceral?',
+ stim:'',
+ opts:['A: "Everything was destroyed."','B: "It destroyed everything."'],ans:1,
+ ex:'"It destroyed" gives the force an active agent. The damage has a source.'},
+{sk:'voice',lv:2,prompt:'Which creates a more eerie tone?',
+ stim:'',
+ opts:['A: "Someone watched me."','B: "I was watched."'],ans:1,
+ ex:'"I was watched" — by whom? The passive keeps the watcher undefined. Eerier.'},
+{sk:'voice',lv:2,prompt:'Which lands harder at the end of a verse?',
+ stim:'',
+ opts:['A: "Silence filled the room."','B: "The room was filled with silence."'],ans:0,
+ ex:'"Silence filled the room" — active subject, immediate verb. Faster, harder, cleaner.'},
+{sk:'voice',lv:2,prompt:'Which version feels more raw and personal?',
+ stim:'',
+ opts:['A: "You told me."','B: "I was told."'],ans:0,
+ ex:'"You told me" names the person responsible. That specificity is more raw than the passive erasure.'},
+{sk:'voice',lv:2,prompt:'Which has useful ambiguity — potentially interesting in a lyric?',
+ stim:'',
+ opts:['A: "I made a mistake."','B: "A mistake was made."'],ans:1,
+ ex:'"A mistake was made" removes responsibility entirely — useful when you want collective guilt or bureaucratic deflection as a lyrical device.'},
+{sk:'voice',lv:2,prompt:'Which is the stronger opening line about survival?',
+ stim:'',
+ opts:['A: "I survived it."','B: "It was survived by me."'],ans:0,
+ ex:'"I survived it" — direct, owned, clear. The passive version is grammatically awkward and emotionally hollow.'},
+
+// ══ VERB L1: Strong or Weak? ══
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"She went to the window."',
+ opts:['Strong','Weak'],ans:1,cols:2,
+ ex:'"Went" tells us she moved but nothing about how. Weak verb.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"She pressed her face to the glass."',
+ opts:['Strong','Weak'],ans:0,cols:2,
+ ex:'"Pressed" — force, contact, desperation. Creates a physical image. Strong.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"Things were getting harder."',
+ opts:['Strong','Weak'],ans:1,cols:2,
+ ex:'"Were getting" — vague state-of-being verb, no physical specificity. Weak.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"The memory surfaces at 3am."',
+ opts:['Strong','Weak'],ans:0,cols:2,
+ ex:'"Surfaces" — a physical action applied to something abstract. Creates a visual. Strong.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"I feel like something is wrong."',
+ opts:['Strong','Weak'],ans:1,cols:2,
+ ex:'"Feel like" reports the feeling at arm\'s length rather than enacting it. Weak.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"He swallowed the apology."',
+ opts:['Strong','Weak'],ans:0,cols:2,
+ ex:'"Swallowed" makes an abstraction physical. Strong — and already a compressed metaphor.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"She is very sad about it."',
+ opts:['Strong','Weak'],ans:1,cols:2,
+ ex:'"Is" — state-of-being verb. Reports emotion at distance instead of embodying it. Weak.'},
+{sk:'verb',lv:1,prompt:'Is this verb strong or weak?',
+ stim:'"Grief coils in the stomach."',
+ opts:['Strong','Weak'],ans:0,cols:2,
+ ex:'"Coils" — physical, precise, active. Takes abstract emotion and gives it body. Strong.'},
+
+// ══ VERB L2: Choose the stronger ══
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "She was gone in the morning."','B: "She slipped out before dawn."'],ans:1,
+ ex:'"Slipped" creates a quiet, intentional physical motion. "Was gone" just reports absence.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "I keep thinking about you."','B: "You keep breaking through."'],ans:1,
+ ex:'"Breaking through" gives the memory physical force. "Keep thinking" is honest but flat.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "He buried everything he felt."','B: "He had a lot of feelings."'],ans:0,
+ ex:'"Buried" is physical, active, already metaphorical. "Had feelings" is vague report.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "I miss you so much."','B: "You live behind my eyes."'],ans:1,
+ ex:'"Live behind my eyes" replaces emotional report with a physical location. Stronger.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "She ended things between us."','B: "She unraveled us thread by thread."'],ans:1,
+ ex:'"Unraveled" is physical and visual, with a sense of slow deliberate process. "Ended things" is neutral.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "It all went wrong somehow."','B: "The whole thing caved."'],ans:1,
+ ex:'"Caved" — structural collapse in a single word. "Went wrong" is vague process.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "I want to keep you close."','B: "I anchor myself to you."'],ans:1,
+ ex:'"Anchor" is physical, desperate, specific. "Keep you close" is soft and vague.'},
+{sk:'verb',lv:2,prompt:'Which uses the stronger verb?',
+ stim:'',
+ opts:['A: "Something was weighing on him."','B: "Something had its hands around his throat."'],ans:1,
+ ex:'"Hands around his throat" is specific, physical, and violent in a way that creates an image. "Weighing on" is an overused abstraction.'},
+
+// ══ PUNCT L1: Comma splice? ══
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"She sang all night, her voice gave out."',
+ opts:['Correct','Comma splice'],ans:1,cols:2,
+ ex:'"She sang all night" and "her voice gave out" are both independent clauses joined only by a comma. Comma splice. Fix: use a semicolon, or add a conjunction.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"She sang all night, and her voice gave out."',
+ opts:['Correct','Comma splice'],ans:0,cols:2,
+ ex:'"And" is a coordinating conjunction. Comma + FANBOYS conjunction = correct.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"He left early, I stayed behind."',
+ opts:['Correct','Comma splice'],ans:1,cols:2,
+ ex:'Two independent clauses, comma only, no conjunction. Comma splice.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"He left early; I stayed behind."',
+ opts:['Correct','Comma splice'],ans:0,cols:2,
+ ex:'A semicolon correctly joins two independent clauses. No comma splice.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"The lights went out, everyone fell silent."',
+ opts:['Correct','Comma splice'],ans:1,cols:2,
+ ex:'Two independent clauses joined by comma only. Comma splice.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"It was cold, so she wore her coat."',
+ opts:['Correct','Comma splice'],ans:0,cols:2,
+ ex:'"So" is a coordinating conjunction (FANBOYS: For, And, Nor, But, Or, Yet, So). Correct.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"I knew the answer, I stayed quiet."',
+ opts:['Correct','Comma splice'],ans:1,cols:2,
+ ex:'Two independent clauses, no conjunction. Comma splice.'},
+{sk:'punct',lv:1,prompt:'Is this sentence correct, or does it contain a comma splice?',
+ stim:'"She tried the door, but it was locked."',
+ opts:['Correct','Comma splice'],ans:0,cols:2,
+ ex:'"But" = coordinating conjunction. Comma + but = correct.'},
+
+// ══ PUNCT L2: That vs Which ══
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"The song ___ changed her life was playing."',
+ opts:['that','which'],ans:0,cols:2,
+ ex:'"That" introduces a restrictive clause — it identifies which specific song. No commas. If you removed the clause, you wouldn\'t know which song.'},
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"Her favorite song, ___ she\'d heard a thousand times, still made her cry."',
+ opts:['that','which'],ans:1,cols:2,
+ ex:'"Which" introduces a non-restrictive clause — the clause adds information but doesn\'t define which song. Set off by commas.'},
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"He took the road ___ led to the bridge."',
+ opts:['that','which'],ans:0,cols:2,
+ ex:'"That" — restrictive. It identifies which road. No commas. Remove the clause and you lose essential meaning.'},
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"The old house, ___ had stood for a century, burned overnight."',
+ opts:['that','which'],ans:1,cols:2,
+ ex:'"Which" — non-restrictive. The clause adds history but doesn\'t identify which house. Commas around it.'},
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"Find the word ___ feels most right."',
+ opts:['that','which'],ans:0,cols:2,
+ ex:'"That" — restrictive clause defining which word. No commas.'},
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"The version ___ you recorded first is better."',
+ opts:['that','which'],ans:0,cols:2,
+ ex:'"That" — restricts to a specific version. No commas.'},
+{sk:'punct',lv:2,prompt:'Which word belongs in the blank?',
+ stim:'"Her voice, ___ once shook the rafters, had grown quiet."',
+ opts:['that','which'],ans:1,cols:2,
+ ex:'"Which" — non-restrictive. We already know whose voice. The clause adds description, not identification.'},
+{sk:'punct',lv:2,prompt:'Quick rule: "that" introduces ___ clauses; "which" introduces ___ clauses.',
+ stim:'',
+ opts:['restrictive / non-restrictive','non-restrictive / restrictive'],ans:0,cols:2,
+ ex:'"That" = restrictive (essential to meaning, no commas). "Which" = non-restrictive (additional info, set off by commas). This distinction changes meaning: "dogs that bite should be leashed" vs "dogs, which are loyal, should be walked."'},
+
+// ══ PUNCT L3: Its/It\'s, Fewer/Less, Who/Whom ══
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"The band played on. ___ been playing for hours."',
+ opts:["It's (it has)","Its (possessive)"],ans:0,cols:2,
+ ex:'"It\'s" = "it is" or "it has." "Its" = possessive (the band and its music). Here: "It has been playing." Apostrophe = contraction.'},
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"The band played ___ best show."',
+ opts:["it's","its"],ans:1,cols:2,
+ ex:'"Its best show" — possessive. No apostrophe. "It\'s" would mean "it is best show" which makes no sense.'},
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"There were ___ people at the show than last time."',
+ opts:['fewer','less'],ans:0,cols:2,
+ ex:'"Fewer" = countable things (people, words, songs). "Less" = uncountable things (time, water, noise). You can count people, so: fewer people.'},
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"She put ___ effort into the bridge."',
+ opts:['fewer','less'],ans:1,cols:2,
+ ex:'"Less" = uncountable. You can\'t count "effort" as discrete units the way you count people. Less effort.'},
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"___ did you call?"',
+ opts:['Who','Whom'],ans:1,cols:2,
+ ex:'"Whom" = object. "You called whom?" — "whom" receives the action. Test: if you\'d say "him," use "whom." If you\'d say "he," use "who."'},
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"___ called you?"',
+ opts:['Who','Whom'],ans:0,cols:2,
+ ex:'"Who" = subject. "Who called?" — "who" performs the action. Test: "He called" (not "him called"), so: who.'},
+{sk:'punct',lv:3,prompt:'Which is correct?',
+ stim:'"She had ___ than five minutes left."',
+ opts:['fewer','less'],ans:1,cols:2,
+ ex:'"Less than five minutes" — time is treated as a continuous quantity, not countable units. Exception to the basic rule.'},
+{sk:'punct',lv:3,prompt:'Which correctly uses a semicolon?',
+ stim:'',
+ opts:['A: "I came; I saw; I left."','B: "I came; because I was afraid."'],ans:0,
+ ex:'Semicolons join independent clauses. "Because I was afraid" is a dependent clause — it can\'t follow a semicolon. Option A uses semicolons correctly between three independent clauses.'},
+
+// ══ MODIFIER L1: Dangling modifier? ══
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Walking home alone, the street felt cold."',
+ opts:['Yes — dangling modifier','No — correct'],ans:0,cols:2,
+ ex:'Who was walking? Grammatically, "the street" — but streets don\'t walk. The modifier "walking home alone" dangles without the person it\'s meant to describe. Fix: "Walking home alone, she felt the street was cold."'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Walking home alone, she noticed the cold."',
+ opts:['Yes — dangling modifier','No — correct'],ans:1,cols:2,
+ ex:'"She" is doing the walking. The modifier attaches correctly to the subject.'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Having finished the song, the studio fell quiet."',
+ opts:['Yes — dangling modifier','No — correct'],ans:0,cols:2,
+ ex:'The studio didn\'t finish the song — someone did. Dangling modifier. Fix: "Having finished the song, he let the studio fall quiet."'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Having finished the song, he sat in silence."',
+ opts:['Yes — dangling modifier','No — correct'],ans:1,cols:2,
+ ex:'"He" finished the song and "he" is sitting. Modifier connects correctly.'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Exhausted from the tour, the couch felt perfect."',
+ opts:['Yes — dangling modifier','No — correct'],ans:0,cols:2,
+ ex:'The couch isn\'t exhausted — someone else is. Dangling modifier. Fix: "Exhausted from the tour, she collapsed on the couch."'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"To write a good lyric, every word must earn its place."',
+ opts:['Yes — dangling modifier','No — correct'],ans:0,cols:2,
+ ex:'"Every word" isn\'t writing the lyric — a writer is. The infinitive phrase dangles. Fix: "To write a good lyric, you must make every word earn its place."'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Driving through the desert, she watched the horizon burn."',
+ opts:['Yes — dangling modifier','No — correct'],ans:1,cols:2,
+ ex:'"She" is driving and watching. The modifier connects to the correct subject.'},
+{sk:'modifier',lv:1,prompt:'Does this sentence contain a dangling modifier?',
+ stim:'"Raised in the South, music was always in the house."',
+ opts:['Yes — dangling modifier','No — correct'],ans:0,cols:2,
+ ex:'"Music" wasn\'t raised in the South. The person was. Dangling modifier. Fix: "Raised in the South, she grew up with music in the house."'},
+
+// ══ MODIFIER L2: Misplaced modifier ══
+{sk:'modifier',lv:2,prompt:'Which sentence has the modifier in the right place?',
+ stim:'',
+ opts:['A: "She almost drove her kids to school every day."','B: "She drove her kids to school almost every day."'],ans:1,
+ ex:'In A, "almost" modifies "drove" — she almost drove but didn\'t? In B, "almost every day" correctly modifies the frequency. Place modifiers next to what they modify.'},
+{sk:'modifier',lv:2,prompt:'Which sentence is clearer?',
+ stim:'',
+ opts:['A: "He only eats vegetables on Tuesdays."','B: "He eats only vegetables on Tuesdays."'],ans:1,
+ ex:'In A, "only" seems to modify "eats" — he only eats, he doesn\'t cook or grow them. In B, "only vegetables" is clear. "Only" should sit directly before what it modifies.'},
+{sk:'modifier',lv:2,prompt:'Which version avoids the misplaced modifier?',
+ stim:'',
+ opts:['A: "I saw a dog walking down the street in a hat."','B: "Walking down the street, I saw a dog wearing a hat."'],ans:1,
+ ex:'In A, the dog seems to be in the hat. In B, "walking down the street" correctly attaches to "I," and "wearing a hat" correctly attaches to the dog.'},
+{sk:'modifier',lv:2,prompt:'Which version is unambiguous?',
+ stim:'',
+ opts:['A: "The songwriter told the producer she hated loudly."','B: "The songwriter loudly told the producer she hated."'],ans:1,
+ ex:'In A, "loudly" could describe the producer or the telling. In B, "loudly" clearly modifies "told." Move the adverb next to the verb it modifies.'},
+{sk:'modifier',lv:2,prompt:'Which version has the modifier correctly placed?',
+ stim:'',
+ opts:['A: "We nearly drove across the whole country."','B: "We drove across nearly the whole country."'],ans:1,
+ ex:'In A, "nearly drove" implies they almost drove but didn\'t. In B, "nearly the whole country" correctly modifies the extent of the journey.'},
+{sk:'modifier',lv:2,prompt:'Which is clearer?',
+ stim:'',
+ opts:['A: "She left me a note on the kitchen table in red ink."','B: "She left me a note in red ink on the kitchen table."'],ans:1,
+ ex:'In A, was the table in red ink? Prepositional phrases should sit close to what they modify. In B, "in red ink" clearly modifies the note.'},
+
+// ══ PRECISION L1: Affect vs Effect, Then vs Than ══
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"The music ___ her deeply."',
+ opts:['affected','effected'],ans:0,cols:2,
+ ex:'"Affect" is usually a verb meaning to influence. "Effect" is usually a noun meaning result. "The music affected her" — affected is the verb here.'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"The ___ was immediate."',
+ opts:['affect','effect'],ans:1,cols:2,
+ ex:'"Effect" is the noun here — the result. "Affect" as a noun is a psychology term (rare). "The effect was immediate."'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"She\'s taller ___ I expected."',
+ opts:['then','than'],ans:1,cols:2,
+ ex:'"Than" is used in comparisons. "Then" refers to time. "Taller than I expected."'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"First she sang, ___ she left."',
+ opts:['then','than'],ans:0,cols:2,
+ ex:'"Then" indicates sequence in time. Not a comparison. "First she sang, then she left."'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"Her voice has more depth ___ his."',
+ opts:['then','than'],ans:1,cols:2,
+ ex:'A comparison: more depth than his. "Than."'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"The song ___ a change in her mood."',
+ opts:['affected','effected'],ans:1,cols:2,
+ ex:'"Effected" (rare verb use) = brought about/caused. "She effected a change" = she caused or brought about that change. Different from "affected" (influenced). Context: the song CAUSED the change.'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"Finish the chorus, ___ move to the bridge."',
+ opts:['then','than'],ans:0,cols:2,
+ ex:'Sequence in time: finish this, then do that. "Then."'},
+{sk:'precision',lv:1,prompt:'Which word is correct?',
+ stim:'"The second verse had more impact ___ the first."',
+ opts:['then','than'],ans:1,cols:2,
+ ex:'Comparison: more impact than the first. "Than."'},
+
+// ══ PRECISION L2: Lay/Lie, Imply/Infer, Good/Well ══
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"I need to ___ down."',
+ opts:['lay','lie'],ans:1,cols:2,
+ ex:'"Lie" = recline (intransitive — no object needed). "Lay" = to place something (needs an object: lay the book down). "I need to lie down" — no object.'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"___ the guitar on the table."',
+ opts:['Lay','Lie'],ans:0,cols:2,
+ ex:'"Lay" = place something somewhere. It needs an object (the guitar). "Lay the guitar down."'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"The lyrics ___ that she\'s angry."',
+ opts:['imply','infer'],ans:0,cols:2,
+ ex:'"Imply" = to suggest or hint (the writer implies, the text implies). "Infer" = to deduce (the reader infers). The lyrics imply; you infer.'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"From the lyrics, you can ___ that she\'s angry."',
+ opts:['imply','infer'],ans:1,cols:2,
+ ex:'"Infer" — you (the reader/listener) draw a conclusion. The text implies; you infer.'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"She sang really ___."',
+ opts:['good','well'],ans:1,cols:2,
+ ex:'"Well" is the adverb — it modifies the verb "sang." "Good" is an adjective (modifies nouns). "She sang well." Exception: "I feel good" is correct because "good" describes the subject, not an action.'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"That\'s a ___ lyric."',
+ opts:['good','well'],ans:0,cols:2,
+ ex:'"Good" is the adjective modifying "lyric." "Well" as an adjective means healthy. "A good lyric."'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"She ___ there for hours."',
+ opts:['lay','laid','lied','lain'],ans:1,
+ ex:'"Lay" is past tense of "lie" (recline): I lie → I lay → I have lain. "Laid" is past tense of "lay" (place). She was reclining, so: "She lay there." But "she laid the book there" is also correct with an object. Here: she reclined = "lay."'},
+{sk:'precision',lv:2,prompt:'Which word is correct?',
+ stim:'"The silence ___ that something had gone wrong."',
+ opts:['implied','inferred'],ans:0,cols:2,
+ ex:'"Implied" — the silence does the suggesting. The listener infers. Silence can\'t infer, only imply.'},
+
+// ══ PRECISION L3: Omit needless words, parallel structure ══
+{sk:'precision',lv:3,prompt:'Which version is tighter (Strunk & White: "omit needless words")?',
+ stim:'',
+ opts:['A: "Due to the fact that she was tired, she stopped."','B: "Because she was tired, she stopped."'],ans:1,
+ ex:'"Due to the fact that" = "because." Four words replaced by one. Every word should carry weight.'},
+{sk:'precision',lv:3,prompt:'Which version is tighter?',
+ stim:'',
+ opts:['A: "At this point in time, we don\'t know."','B: "We don\'t know yet."'],ans:1,
+ ex:'"At this point in time" = "now" or "yet." Three unnecessary words.'},
+{sk:'precision',lv:3,prompt:'Which sentence has correct parallel structure?',
+ stim:'',
+ opts:['A: "She loved singing, to dance, and the writing of songs."','B: "She loved singing, dancing, and writing songs."'],ans:1,
+ ex:'Items in a list should be in the same grammatical form. B uses three gerunds (singing, dancing, writing). A mixes gerund, infinitive, and noun phrase. Parallel structure.'},
+{sk:'precision',lv:3,prompt:'Which sentence has correct parallel structure?',
+ stim:'',
+ opts:['A: "He was tired, hungry, and needed sleep."','B: "He was tired, hungry, and exhausted."'],ans:1,
+ ex:'B: three adjectives. A: two adjectives then a verb phrase. The list must be parallel. "He was tired, hungry, and in need of sleep" would also work — but all three must match.'},
+{sk:'precision',lv:3,prompt:'Which version is tighter?',
+ stim:'',
+ opts:['A: "The reason why she left is because she was hurt."','B: "She left because she was hurt."'],ans:1,
+ ex:'"The reason why... is because" is redundant. "Because" already gives the reason. Cut to the bone.'},
+{sk:'precision',lv:3,prompt:'Which is tighter?',
+ stim:'',
+ opts:['A: "He was a man who never spoke."','B: "He never spoke."'],ans:1,
+ ex:'"A man who" is a relative clause that can always be cut when the subject is already clear. Omit needless words.'},
+{sk:'precision',lv:3,prompt:'Which sentence has correct parallel structure?',
+ stim:'',
+ opts:['A: "The song was slow, it was quiet, and emotional."','B: "The song was slow, quiet, and emotional."'],ans:1,
+ ex:'B: three adjectives after a single "was." A breaks the pattern by repeating "it was" before the first two. Keep the list parallel.'},
+{sk:'precision',lv:3,prompt:'Which version is tighter?',
+ stim:'',
+ opts:['A: "She spoke in a quiet voice."','B: "She spoke quietly."'],ans:1,
+ ex:'"In a quiet voice" = "quietly." The adverb does the same work in one word. Compress.'},
+
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+function defaultState(){
+  const skills={};
+  Object.keys(SKILLS).forEach(id=>{
+    skills[id]={mastery:0,lv:1,seen:{},correct:{},streak:0,sessions:0};
+  });
+  return{xp:0,drainSpeed:'med',skills};
+}
+function loadState(){
+  try{const d=localStorage.getItem('craft_v2');return d?{...defaultState(),...JSON.parse(d)}:defaultState();}
+  catch(e){return defaultState();}
+}
+function saveState(){localStorage.setItem('craft_v2',JSON.stringify(STATE));}
+let STATE=loadState();
+
+// ─────────────────────────────────────────────
+// SPACED REPETITION
+// ─────────────────────────────────────────────
+function getQsForSkill(skId,count=8){
+  const sk=STATE.skills[skId];
+  const pool=BANK.filter(q=>q.sk===skId&&q.lv<=Math.min(sk.lv+1,4));
+  function weight(q){
+    const key=`${q.sk}_${BANK.indexOf(q)}`;
+    const seen=sk.seen[key]||0;
+    const cor=sk.correct[key]||0;
+    if(seen===0)return 10;
+    const acc=cor/seen;
+    if(acc<0.5)return 8;
+    if(acc<0.75)return 5;
+    return 2;
+  }
+  let weighted=[];
+  pool.forEach(q=>{const w=weight(q);for(let i=0;i<w;i++)weighted.push(q);});
+  for(let i=weighted.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[weighted[i],weighted[j]]=[weighted[j],weighted[i]];}
+  const seen=new Set();const result=[];
+  for(const q of weighted){if(!seen.has(q)&&result.length<count){seen.add(q);result.push(q);}}
+  if(result.length<3){const fallback=BANK.filter(q=>q.sk===skId);return fallback.slice(0,8);}
+  return result;
+}
+
+// ─────────────────────────────────────────────
+// MASTERY ENGINE
+// ─────────────────────────────────────────────
+function recordAnswer(skId,q,correct){
+  const sk=STATE.skills[skId];
+  const key=`${q.sk}_${BANK.indexOf(q)}`;
+  sk.seen[key]=(sk.seen[key]||0)+1;
+  if(correct)sk.correct[key]=(sk.correct[key]||0)+1;
+  const lvQs=BANK.filter(qq=>qq.sk===skId&&qq.lv<=sk.lv);
+  let totalSeen=0,totalCor=0;
+  lvQs.forEach(qq=>{const k=`${qq.sk}_${BANK.indexOf(qq)}`;totalSeen+=(sk.seen[k]||0);totalCor+=(sk.correct[k]||0);});
+  if(totalSeen>0){
+    const raw=(totalCor/totalSeen)*100;
+    const alpha=0.35;
+    sk.mastery=Math.max(0,Math.min(100,sk.mastery*(1-alpha)+raw*alpha));
+  }
+  if(sk.mastery>=getLvThresh(sk.lv)&&sk.lv<4)sk.lv=Math.min(4,sk.lv+1);
+  saveState();
+}
+function getLvThresh(lv){return[0,25,50,75][Math.min(lv-1,3)];}
+function calcXP(correct,streak){
+  if(!correct)return 0;
+  return 10+(streak>=5?15:streak>=3?8:0);
+}
+function getMasteryLabel(m){
+  if(m>=85)return'Certified';
+  if(m>=65)return'Advanced';
+  if(m>=45)return'Proficient';
+  if(m>=25)return'Developing';
+  if(m>=10)return'Learning';
+  return'Novice';
+}
+
+// ─────────────────────────────────────────────
+// DRAIN
+// ─────────────────────────────────────────────
+let drainTimer=null,autoAdvTimer=null,answered=false;
+
+function startDrain(dur){
+  const bar=document.getElementById('drain-bar');
+  if(!bar)return;
+  answered=false;
+  bar.style.transition='none';
+  bar.style.width='100%';
+  bar.offsetWidth; // force reflow
+  requestAnimationFrame(()=>{
+    bar.style.transition=`width ${dur/1000}s linear`;
+    bar.style.width='0%';
+  });
+  drainTimer=setTimeout(()=>{if(!answered)handleTimeout();},dur);
+}
+
+function stopDrain(){
+  if(drainTimer){clearTimeout(drainTimer);drainTimer=null;}
+  const bar=document.getElementById('drain-bar');
+  if(bar){const w=getComputedStyle(bar).width;bar.style.transition='none';bar.style.width=w;}
+}
+
+function handleTimeout(){
+  answered=true;
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  const q=SESSION.questions[SESSION.idx];
+  document.querySelectorAll('.opt').forEach((b,i)=>{if(i===q.ans)b.classList.add('reveal');});
+  SESSION.streak=0;
+  recordAnswer(SESSION.skId,q,false);
+  const fb=document.getElementById('fb');
+  fb.className='fb no show';
+  fb.innerHTML=`<strong>Time.</strong> ${q.ex}`;
+  autoAdvTimer=setTimeout(()=>nextQuestion(),5500);
+}
+
+function clearTimers(){
+  if(drainTimer){clearTimeout(drainTimer);drainTimer=null;}
+  if(autoAdvTimer){clearTimeout(autoAdvTimer);autoAdvTimer=null;}
+}
+
+// ─────────────────────────────────────────────
+// SESSION
+// ─────────────────────────────────────────────
+let SESSION={};
+
+function startSession(skId){
+  clearTimers();
+  const s=SKILLS[skId];
+  SESSION={skId,questions:getQsForSkill(skId,8),idx:0,streak:0,correct:0,xpEarned:0,masteryBefore:STATE.skills[skId].mastery};
+  setCSSVar('--sc',s.col);
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered=false;
+  document.activeElement&&document.activeElement.blur();
+  const skId=SESSION.skId;
+  const s=SKILLS[skId];
+  const q=SESSION.questions[SESSION.idx];
+  const total=SESSION.questions.length;
+  const isTimed=s.timed;
+  const sc=SESSION.streak;
+  const streakClass=sc>=5?'fire':sc>=3?'hot':sc>=1?'warm':'cold';
+  const streakLabel=sc>0?`${sc}×`:'—';
+
+  document.getElementById('wrap').innerHTML=`
+  <div class="gv">
+    <div class="g-nav">
+      <button class="g-back" onclick="backToHub()">← Back</button>
+      <div class="g-meta">
+        <span class="g-prog">${SESSION.idx+1} / ${total}</span>
+        <span class="g-streak ${streakClass}">STREAK ${streakLabel}</span>
+      </div>
+    </div>
+    ${isTimed?`<div class="drain-wrap"><div class="drain-bar" id="drain-bar" style="background:${s.col}"></div></div>`:''}
+    <div class="q-card${isTimed?'':' notimed'}">
+      <div class="q-prompt"><span class="q-label">${s.name}</span> — ${q.prompt}</div>
+      <div class="q-stim">${q.stim||'&nbsp;'}</div>
+    </div>
+    <div class="opts${q.cols===2?' cols2':''}" id="opts">
+      ${q.opts.map((o,i)=>`<button class="opt" onclick="handleAnswer(${i})">${o}</button>`).join('')}
+    </div>
+    <div class="fb" id="fb"></div>
+    <button class="g-next" id="g-next" onclick="nextQuestion()">${SESSION.idx+1>=total?'See Results →':'Next →'}</button>
+  </div>`;
+
+  if(isTimed){
+    const dur=DRAIN_SPEEDS[STATE.drainSpeed||'med'];
+    setTimeout(()=>startDrain(dur),60);
+  }
+}
+
+function handleAnswer(chosen){
+  if(answered)return;
+  answered=true;
+  document.activeElement&&document.activeElement.blur();
+  const skId=SESSION.skId;
+  const s=SKILLS[skId];
+  const isTimed=s.timed;
+  if(isTimed)stopDrain();
+
+  const q=SESSION.questions[SESSION.idx];
+  const correct=chosen===q.ans;
+
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.opt').forEach((b,i)=>{
+    if(i===q.ans)b.classList.add(correct?'correct':'reveal');
+    else if(i===chosen&&!correct)b.classList.add('wrong');
+  });
+
+  if(correct){SESSION.streak++;SESSION.correct++;}else{SESSION.streak=0;}
+
+  const xp=calcXP(correct,SESSION.streak);
+  SESSION.xpEarned+=xp;
+  STATE.xp+=xp;
+  recordAnswer(skId,q,correct);
+
+  if(xp>0)showXPFloat(xp);
+  if(SESSION.streak===3)showStreakFlash('3 IN A ROW',s.col);
+  if(SESSION.streak===5)showStreakFlash('ON FIRE',s.col);
+
+  const fb=document.getElementById('fb');
+  fb.className=`fb ${correct?'ok':'no'} show`;
+  fb.innerHTML=`<strong>${correct?'Correct.':'Incorrect.'}</strong> ${q.ex}`;
+
+  if(isTimed){
+    autoAdvTimer=setTimeout(()=>nextQuestion(),5500);
+    const btn=document.getElementById('g-next');
+    if(btn)setTimeout(()=>btn.classList.add('ready'),400);
+  }else{
+    const btn=document.getElementById('g-next');
+    if(btn)setTimeout(()=>btn.classList.add('ready'),300);
+  }
+}
+
+function nextQuestion(){
+  clearTimers();
+  SESSION.idx++;
+  if(SESSION.idx>=SESSION.questions.length)renderResults();
+  else renderQuestion();
+}
+
+function backToHub(){clearTimers();renderHub();}
+
+// ─────────────────────────────────────────────
+// RESULTS
+// ─────────────────────────────────────────────
+function renderResults(){
+  const skId=SESSION.skId;
+  const s=SKILLS[skId];
+  const sk=STATE.skills[skId];
+  const score=SESSION.correct;
+  const total=SESSION.questions.length;
+  const pct=Math.round((score/total)*100);
+  const mBefore=Math.round(SESSION.masteryBefore);
+  const mAfter=Math.round(sk.mastery);
+  const certified=mAfter>=CERT_THRESH&&mBefore<CERT_THRESH;
+  sk.sessions=(sk.sessions||0)+1;
+  saveState();
+
+  document.getElementById('wrap').innerHTML=`
+  <div class="res">
+    <div class="g-nav">
+      <button class="g-back" onclick="renderHub()">← All Skills</button>
+    </div>
+    ${certified?`<div class="cert-banner" style="background:${s.col}20;border:1px solid ${s.col}55"><div class="cert-t" style="color:${s.col}">Skill Certified: ${s.name}</div><div class="cert-s">Mastery threshold reached. Keep drilling to retain it.</div></div>`:''}
+    <div class="res-head">
+      <div class="res-tag" style="color:${s.col}">${s.name}</div>
+      <div class="res-score">${score}/${total}</div>
+      <div class="res-sub">${pct}% accuracy this session</div>
+    </div>
+    <div class="mastery-block">
+      <div class="mb-head"><span>Mastery</span><span style="color:${s.col}">${getMasteryLabel(mAfter)}</span></div>
+      <div class="mb-bar">
+        <div class="mb-base"></div>
+        <div class="mb-old" style="width:${mBefore}%;background:${s.col}"></div>
+        <div class="mb-new" id="mb-new" style="background:${s.col}"></div>
+      </div>
+      <div class="mb-vals"><span>Was ${mBefore}%</span><span style="color:${s.col}">Now ${mAfter}%</span></div>
+    </div>
+    <div class="xp-block">
+      <div class="xp-big">+${SESSION.xpEarned}</div>
+      <div class="xp-big-l">XP earned · Total ${STATE.xp} XP</div>
+    </div>
+    <div class="res-acts">
+      <button class="btn-prim" style="background:${s.col}" onclick="startSession('${skId}')">Drill Again</button>
+      <button class="btn-soft" onclick="renderHub()">Hub</button>
+    </div>
+  </div>`;
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const el=document.getElementById('mb-new');
+    if(el)el.style.width=mAfter+'%';
+  }));
+}
+
+// ─────────────────────────────────────────────
+// HUB
+// ─────────────────────────────────────────────
+function renderHub(){
+  clearTimers();
+  const speed=STATE.drainSpeed||'med';
+  const totalXP=STATE.xp;
+
+  let html=`
+  <div class="hdr">
+    <div>
+      <div class="hdr-title">Craft Suite</div>
+      <div class="hdr-sub">Technical Mastery Drills</div>
+    </div>
+    <div>
+      <div class="xp-n">${totalXP}<span style="font-size:.6rem;color:var(--t3);margin-left:.25rem">XP</span></div>
+      <div class="xp-l">Total Earned</div>
+    </div>
+  </div>
+  <div class="speed-row">
+    <span class="speed-label">Drill Speed</span>
+    <div class="speed-opts">
+      <button class="speed-btn${speed==='slow'?' on':''}" onclick="setSpeed('slow')">Slow</button>
+      <button class="speed-btn${speed==='med'?' on':''}" onclick="setSpeed('med')">Med</button>
+      <button class="speed-btn${speed==='fast'?' on':''}" onclick="setSpeed('fast')">Fast</button>
+    </div>
+    <span class="speed-note">timed drills only</span>
+  </div>
+  <div class="sk-list">`;
+
+  SKILL_GROUPS.forEach(group=>{
+    html+=`<div class="sec-head">${group.label}</div>`;
+    group.ids.forEach(id=>{
+      const s=SKILLS[id];
+      const sk=STATE.skills[id];
+      const m=Math.round(sk.mastery);
+      const cert=m>=CERT_THRESH;
+      html+=`
+      <div class="sk-card" style="--sc:${s.col}" onclick="startSession('${id}')">
+        <div class="sk-top">
+          <div class="sk-info">
+            <div class="sk-icon">${s.icon}</div>
+            <div>
+              <div class="sk-name">${s.name}</div>
+              <div class="sk-dsub">${s.sub}</div>
+            </div>
+          </div>
+          <div class="sk-right">
+            <div class="sk-badge${cert?' cert':''}">${cert?'✓ Certified':getMasteryLabel(m)}</div>
+            ${s.timed?`<div class="sk-timed">timed</div>`:''}
+          </div>
+        </div>
+        <div class="sk-bot">
+          <div class="sk-trk"><div class="sk-fill" style="width:${m}%;background:${s.col}"></div></div>
+          <div class="sk-pct" style="color:${s.col}">${m}%</div>
+          <button class="sk-go" style="color:${s.col};border-color:${s.col}" onclick="event.stopPropagation();startSession('${id}')">Drill →</button>
+        </div>
+      </div>`;
+    });
+  });
+
+  html+=`</div>`;
+  document.getElementById('wrap').innerHTML=html;
+  setCSSVar('--sc','#ddb94a');
+}
+
+function setSpeed(s){
+  STATE.drainSpeed=s;
+  saveState();
+  renderHub();
+}
+
+// ─────────────────────────────────────────────
+// EFFECTS
+// ─────────────────────────────────────────────
+function showXPFloat(xp){
+  const el=document.createElement('div');
+  el.className='xpf';
+  el.style.color='var(--ok)';
+  el.style.left='50%';
+  el.style.top='38%';
+  el.textContent=`+${xp} XP`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),950);
+}
+
+function showStreakFlash(msg,col){
+  const el=document.createElement('div');
+  el.className='streak-pop';
+  el.style.cssText=`background:${col};color:var(--bg);left:50%;transform:translate(-50%,-50%)`;
+  el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+
+function setCSSVar(k,v){document.documentElement.style.setProperty(k,v);}
+
+// ─────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────
+renderHub();
+</script>
+</body>
+</html>
